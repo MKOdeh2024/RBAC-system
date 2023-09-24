@@ -15,37 +15,59 @@ roleRoute.get('/:id', (req, res) => {
 });
 roleRoute.post('/', async (req, res) => {
     const newRole = new Role_1.role();
-    newRole.name = req.body.name;
+    newRole.name = req.body.rolename;
     await dataSource_1.dataSource.manager.save(newRole).then(() => res.send("Role create with id : " + newRole.id))
         .catch((error) => res.status(500).send("Role creation failed"));
 });
-// assign permission to role
+// Assign permission to role
 roleRoute.post('/:roleid/:permissionid', async (req, res) => {
-    const roleId = Number(req.params.roleid);
-    const permissionID = Number(req.params.permissionid);
-    const uniqueRole = dataSource_1.dataSource.manager.findOneBy(Role_1.role, { id: roleId });
-    const uniquePerm = dataSource_1.dataSource.manager.findOneBy(Permission_1.permission, { id: permissionID });
-    await dataSource_1.dataSource
-        .createQueryBuilder()
-        .update(uniqueRole)
-        .set({
-        Permissions: [uniquePerm]
-    })
-        .where("id = :id", { id: permissionID })
-        .execute().then((unigueRole) => {
-        res.send("Role updated  successfully :" + unigueRole);
-    })
-        .catch((error) => {
-        res.status(404).send("NO Role found with this data");
-    });
+    try {
+        const roleId = Number(req.params.roleid);
+        const permissionId = Number(req.params.permissionid);
+        // Check if the role exists
+        const uniqueRole = await dataSource_1.dataSource.manager.findOne(Role_1.role, { where: { id: roleId } });
+        if (!uniqueRole) {
+            return res.status(404).send({ message: "Role not found" });
+        }
+        // Check if the permission exists
+        const uniquePerm = await dataSource_1.dataSource.manager.findOne(Permission_1.permission, { where: { id: permissionId } });
+        if (!uniquePerm) {
+            return res.status(404).send({ message: "Permission not found" });
+        }
+        // Assuming 'Permissions' is an array. Add the new permission to it without overwriting existing permissions
+        if (Array.isArray(uniqueRole.permissions)) {
+            uniqueRole.permissions.push(uniquePerm);
+        }
+        else {
+            uniqueRole.permissions = [uniquePerm];
+        }
+        // Save the updated role entity
+        await dataSource_1.dataSource.manager.save(Role_1.role, uniqueRole);
+        res.status(200).send({ message: "Permission assigned to role successfully" });
+    }
+    catch (error) {
+        console.error("Runtime error:", error); // Using console.error for errors
+        res.status(500).send({ message: "Internal server error" });
+    }
 });
 roleRoute.put('/:userid', (req, res) => {
     res.send('User Updated');
 });
 roleRoute.delete('/:id', async (req, res) => {
-    const ID = Number(req.params.id);
-    const unigueRole = dataSource_1.dataSource.manager.findOneBy(Role_1.role, { id: ID });
-    await dataSource_1.dataSource.manager.remove(unigueRole).then(() => res.send("Role Deleted"))
-        .catch((error) => res.status(404).send("Not found"));
+    try {
+        const roleId = Number(req.params.id);
+        // Check if the role exists
+        const uniqueRole = await dataSource_1.dataSource.manager.findOne(Role_1.role, { where: { id: roleId } });
+        if (!uniqueRole) {
+            return res.status(404).send({ message: "Role not found" });
+        }
+        // Remove the role
+        await dataSource_1.dataSource.manager.remove(uniqueRole);
+        res.status(200).send({ message: "Role deleted successfully" });
+    }
+    catch (error) {
+        console.error("Runtime error:", error); // Using console.error for errors
+        res.status(500).send({ message: "Internal server error" });
+    }
 });
 exports.default = roleRoute;

@@ -33,12 +33,20 @@ __decorate([
     __metadata("design:type", String)
 ], user.prototype, "password", void 0);
 __decorate([
+    (0, typeorm_1.Column)({
+        type: 'enum',
+        enum: ['employee', 'employer', 'admin', 'editor', 'user'],
+        default: 'employee'
+    }),
+    __metadata("design:type", String)
+], user.prototype, "type", void 0);
+__decorate([
     (0, typeorm_1.OneToOne)(() => Profile_1.profile),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Profile_1.profile)
 ], user.prototype, "profile", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Role_1.role),
+    (0, typeorm_1.ManyToMany)(() => Role_1.role, { cascade: true, eager: true }),
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
 ], user.prototype, "Roles", void 0);

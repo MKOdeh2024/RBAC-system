@@ -20,11 +20,11 @@ __decorate([
     __metadata("design:type", Number)
 ], role.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false }),
+    (0, typeorm_1.Column)({ nullable: false, unique: true }),
     __metadata("design:type", String)
 ], role.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Permission_1.permission),
+    (0, typeorm_1.ManyToMany)(() => Permission_1.permission, { cascade: true, eager: true }),
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
 ], role.prototype, "permissions", void 0);

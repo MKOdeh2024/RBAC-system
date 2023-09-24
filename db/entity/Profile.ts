@@ -5,13 +5,13 @@ export class profile extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
     id: number
 
-    @Column({length : 20 ,nullable : false})
+    @Column({length : 20})
     firstName: string
 
-    @Column({length : 20 ,nullable : false})
+    @Column({length : 20})
     lastName: string
 
-    @Column()
-    dateOfBirth: Date
+    @Column({nullable: true})
+    dateOfBirth: string
 
 }

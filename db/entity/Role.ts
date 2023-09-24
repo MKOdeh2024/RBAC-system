@@ -7,9 +7,11 @@ export class role extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
     id: number
 
-    @Column({nullable : false})
+    @Column({nullable : false, unique: true})
     name: string
-    @ManyToMany(() => permission)
+
+
+    @ManyToMany(() => permission,{cascade: true, eager: true})
     @JoinTable()
     permissions: permission[]
 }

@@ -19,7 +19,7 @@ __decorate([
     __metadata("design:type", Number)
 ], permission.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false }),
+    (0, typeorm_1.Column)({ nullable: false, unique: true }),
     __metadata("design:type", String)
 ], permission.prototype, "name", void 0);
 exports.permission = permission = __decorate([

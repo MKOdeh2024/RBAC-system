@@ -19,16 +19,16 @@ __decorate([
     __metadata("design:type", Number)
 ], profile.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 20, nullable: false }),
+    (0, typeorm_1.Column)({ length: 20 }),
     __metadata("design:type", String)
 ], profile.prototype, "firstName", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 20, nullable: false }),
+    (0, typeorm_1.Column)({ length: 20 }),
     __metadata("design:type", String)
 ], profile.prototype, "lastName", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Date)
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
 ], profile.prototype, "dateOfBirth", void 0);
 exports.profile = profile = __decorate([
     (0, typeorm_1.Entity)()

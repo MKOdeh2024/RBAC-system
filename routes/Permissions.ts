@@ -22,11 +22,27 @@ permissionRoute.get('/all', (req, res) => {
   });
   
   permissionRoute.put('/:id', (req, res) => {
-    res.send('User Updated');
+    res.send('permission Updated');
   });
   
-  permissionRoute.delete('/:id', (req, res) => {
-    res.send('User Deleted');
+  permissionRoute.delete('/:id', async(req, res) => {
+    try {
+      const permID = Number(req.params.id);
+
+      // Check if the role exists
+      const uniquePerm = await dataSource.manager.findOne(permission, {where:{ id: permID }});
+      if (!uniquePerm) {
+          return res.status(404).send({ message: "permission not found" });
+      }
+
+      // Remove the role
+      await dataSource.manager.remove(uniquePerm);
+
+      res.status(200).send({ message: "permission deleted successfully" });
+  } catch (error) {
+      console.error("Runtime error:", error); // Using console.error for errors
+      res.status(500).send({ message: "Internal server error" });
+  }
   });
   
   export default permissionRoute;
